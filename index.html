@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SaaS Estacionamento - PWA</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Rajdhani', 'sans-serif'],
+                    },
+                    colors: {
+                        'auto-black': '#000000',
+                        'auto-graphite': '#111111',
+                        'auto-metal': '#222222',
+                        'sport-red': '#ff4757',
+                        'electric-blue': '#1e90ff',
+                        'dashboard-green': '#2ed573',
+                        'pure-white': '#ffffff',
+                        'off-white': '#a4b0be',
+                    },
+                    boxShadow: {
+                        'neon-green': '0 0 15px rgba(46, 213, 115, 0.2)',
+                        'neon-red': '0 0 15px rgba(255, 71, 87, 0.2)',
+                        'neon-blue': '0 0 15px rgba(30, 144, 255, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.3s, color 0.3s; }
+        
+        .app-bg { background-color: #f3f4f6; }
+        .text-main { color: #111827; }
+        .text-sub { color: #6b7280; }
+        .border-theme { border-color: #e5e7eb; }
+        .glass-card {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .nav-bg { background-color: #ffffff; }
+
+        .dark .app-bg { background-color: #000000; }
+        .dark .text-main { color: #ffffff; }
+        .dark .text-sub { color: #a4b0be; }
+        .dark .border-theme { border-color: #222222; }
+        .dark .glass-card {
+            background-color: #111111;
+            border: 1px solid #222222;
+            box-shadow: none;
+        }
+        .dark .nav-bg { background-color: #0a0a0a; border-top: 1px solid #222222; }
+
+        .input-style { @apply w-full bg-transparent border border-gray-300 dark:border-auto-metal text-gray-900 dark:text-pure-white rounded-lg px-4 py-3 outline-none focus:border-electric-blue transition-colors; }
+        
+        ::-webkit-scrollbar { display: none; }
+        input[type="file"] { display: none; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex justify-center bg-gray-300 dark:bg-black">
+
+    <div class="w-full max-w-md app-bg min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+        
+        <!-- Header -->
+        <header class="p-6 pb-2 z-10">
+            <div class="flex justify-between items-center mb-1">
+                <div>
+                    <h1 class="text-2xl font-display font-bold text-main" id="saudacao">Olá, Fabiano</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleTheme()" class="text-sub hover:text-electric-blue transition-colors">
+                        <i data-lucide="sun" id="icon-sun" class="w-6 h-6 hidden dark:block"></i>
+                        <i data-lucide="moon" id="icon-moon" class="w-6 h-6 block dark:hidden"></i>
+                    </button>
+                    <button class="relative p-2 rounded-full border border-theme glass-card">
+                        <i data-lucide="bell" class="w-4 h-4 text-sub"></i>
+                        <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-sport-red rounded-full border border-white dark:border-auto-black"></span>
+                    </button>
+                </div>
+            </div>
+            <!-- Subtítulo de organização mantido -->
+            <div class="text-[10px] text-electric-blue uppercase tracking-widest font-bold flex items-center gap-1 mt-1">
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto pb-28 relative px-6">
+            
+            <!-- VIEW: INÍCIO -->
+            <section id="view-inicio" class="view-section block">
+                
+                <div class="flex items-center gap-3 mt-4 mb-4">
+                    <div class="w-12 h-12 rounded-lg bg-electric-blue flex flex-shrink-0 items-center justify-center text-white shadow-neon-blue">
+                        <i data-lucide="parking-circle" class="w-7 h-7"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center gap-1 border-b border-theme pb-1 mb-1 relative">
+                            <select id="branch-selector" onchange="changeBranch()" class="bg-transparent text-lg font-bold text-main outline-none appearance-none cursor-pointer pr-4 w-full truncate relative z-10">
+                                <option value="1" class="text-black">AutoPrime Park - Matriz</option>
+                                <option value="2" class="text-black">AutoPrime - Sul Shopping</option>
+                                <option value="3" class="text-black">AutoPrime - Aeroporto</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="w-4 h-4 text-sub absolute right-0 z-0"></i>
+                        </div>
+                        
+                        <button onclick="openHoursModal()" class="text-xs text-dashboard-green font-medium flex items-center gap-1 hover:opacity-80 transition-opacity w-full text-left">
+                            <i data-lucide="clock" class="w-3 h-3 flex-shrink-0"></i> 
+                            <span id="current-hours">Aberto Hoje: 06:00 às 23:00</span>
+                            <i data-lucide="info" class="w-3 h-3 ml-1 text-sub"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 mb-2 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-dashboard-green to-transparent opacity-50"></div>
+                    <p class="text-[10px] text-sub font-bold mb-2 uppercase tracking-wide">Vagas Disponíveis Agora</p>
+                    <div class="text-7xl font-display font-bold text-dashboard-green drop-shadow-neon-green transition-all duration-500 leading-none mb-3" id="vagas-counter">
+                        --
+                    </div>
+                    <p class="text-[10px] text-sub flex items-center justify-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-dashboard-green animate-pulse"></span> Sincronizado ao vivo
+                    </p>
+                </div>
+
+                <!-- Barra de Ocupação com cores dinâmicas -->
+                <div class="mb-5 px-2">
+                    <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider mb-1">
+                        <span class="text-sub">Taxa de Ocupação</span>
+                        <span id="occupancy-rate" class="font-bold">--%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-auto-metal rounded-full h-1.5">
+                        <div id="occupancy-bar" class="h-1.5 rounded-full transition-all duration-1000 bg-dashboard-green" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- NOVO: Tabela de Preços na Início -->
+                <div class="mt-6 mb-6">
+                    <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="tags" class="w-4 h-4 text-electric-blue"></i> Tabela de Preços
+                    </h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-electric-blue">
+                            <p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Hora</p>
+                            <p class="text-lg font-display font-bold text-main">R$ 15</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-dashboard-green">
+                            <p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Diária</p>
+                            <p class="text-lg font-display font-bold text-main">R$ 45</p>
+                        </div>
+                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-sport-red">
+                            <p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Mês</p>
+                            <p class="text-lg font-display font-bold text-main">R$ 350</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 mb-5 flex justify-between items-end border-t border-t-electric-blue/30">
+                    <div>
+                        <p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Seu Cashback</p>
+                        <p class="text-2xl font-display font-bold text-main">R$ 45,00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Pontos</p>
+                        <p class="text-xl font-display font-bold text-electric-blue">1.250</p>
+                    </div>
+                </div>
+
+                <div class="mt-8">
+                    <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="calendar-check" class="w-4 h-4 text-electric-blue"></i> Suas Reservas Ativas
+                    </h3>
+                    <div id="home-reservas-list" class="space-y-3">
+                        <!-- Injetado via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: MAPS -->
+            <section id="view-maps" class="view-section hidden">
+                <h2 class="text-xl font-display font-bold text-main my-5">Localização</h2>
+                <div class="glass-card rounded-2xl overflow-hidden mb-6">
+                    <div class="w-full h-48 bg-gray-200 dark:bg-auto-metal relative flex items-center justify-center">
+                        <img id="maps-fachada" src="https://via.placeholder.com/600x300/111/444?text=Fachada+do+Estacionamento" alt="Fachada" class="w-full h-full object-cover opacity-80 mix-blend-overlay">
+                        <div class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] px-2 py-1 rounded backdrop-blur-md" id="maps-label">AutoPrime Park</div>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-main" id="maps-name">AutoPrime Park - Matriz</h3>
+                            <p class="text-xs text-sub mt-2 flex items-start gap-2">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-sport-red flex-shrink-0"></i>
+                                <span id="maps-address">Av. Paulista, 1000 - Bela Vista, São Paulo - SP</span>
+                            </p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-theme pt-4">
+                            <div>
+                                <p class="text-[10px] text-sub font-bold uppercase">Telefone</p>
+                                <p class="text-sm font-bold text-main" id="maps-phone">(11) 98765-4321</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-sub font-bold uppercase">E-mail</p>
+                                <p class="text-sm font-bold text-main truncate">contato@autoprime.com</p>
+                            </div>
+                        </div>
+                        <a id="maps-link" href="#" target="_blank" class="w-full bg-electric-blue text-white font-bold py-3.5 rounded-xl mt-4 flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors shadow-neon-blue text-sm">
+                            <i data-lucide="navigation" class="w-5 h-5"></i> Como Chegar (Google Maps)
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: AGENDAMENTO (+) -->
+            <section id="view-reserva" class="view-section hidden">
+                <h2 class="text-xl font-display font-bold text-main my-5">Agendar Vaga</h2>
+                <form class="glass-card rounded-2xl p-5 space-y-5">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-[10px] text-sub font-bold uppercase tracking-wider">Selecione o Veículo</label>
+                            <button type="button" onclick="openVehicleModal()" class="text-[10px] text-electric-blue font-bold uppercase tracking-wider flex items-center gap-1">
+                                <i data-lucide="plus" class="w-3 h-3"></i> Adicionar
+                            </button>
+                        </div>
+                        <select id="reserva-veiculo" class="input-style bg-gray-50 dark:bg-auto-graphite"></select>
+                    </div>
+                    
+                    <div>
+                        <label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-2">Modalidade de Preço</label>
+                        <select id="tipo-reserva" class="input-style bg-gray-50 dark:bg-auto-graphite" onchange="toggleFiltrosReserva()">
+                            <option value="hora">Por Hora (R$ 15,00 / hora)</option>
+                            <option value="dia">Por Dia (R$ 45,00 / diária)</option>
+                        </select>
+                    </div>
+
+                    <div id="container-hora" class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Data</label>
+                            <input type="date" id="res-data" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Hora Entrada</label>
+                            <input type="time" id="res-hora-ini" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Hora Prev. Saída</label>
+                            <input type="time" id="res-hora-fim" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                    </div>
+
+                    <div id="container-dia" class="grid grid-cols-2 gap-4 hidden">
+                        <div>
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Dia Inicial</label>
+                            <input type="date" id="res-dia-ini" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Dia Final</label>
+                            <input type="date" id="res-dia-fim" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                    </div>
+
+                    <div class="border-t border-theme pt-4 mt-2">
+                        <p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Valor Estimado Total</p>
+                        <p class="text-4xl font-display font-bold text-dashboard-green" id="valor-simulado">R$ 0,00</p>
+                    </div>
+
+                    <button type="button" onclick="confirmarAgendamento()" class="w-full bg-electric-blue text-white font-bold py-4 rounded-xl mt-2 hover:bg-blue-600 transition-colors shadow-neon-blue text-sm">
+                        Confirmar Agendamento
+                    </button>
+                </form>
+            </section>
+
+            <!-- VIEW: CARTEIRA -->
+            <section id="view-carteira" class="view-section hidden">
+                <h2 class="text-xl font-display font-bold text-main my-5">Programa de Fidelidade</h2>
+                <div class="bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-300 rounded-2xl p-6 text-white mb-6 relative overflow-hidden shadow-lg border border-yellow-400/50">
+                    <div class="absolute right-[-20px] top-[-20px] opacity-20">
+                        <i data-lucide="award" class="w-32 h-32"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-widest mb-1 opacity-90">Seu Nível Atual</p>
+                    <h3 class="text-3xl font-display font-bold mb-4 drop-shadow-md">Nível Ouro</h3>
+                    <div class="flex justify-between items-end">
+                        <div><p class="text-[10px] uppercase font-bold opacity-90">Cashback</p><p class="text-xl font-bold">R$ 45,00</p></div>
+                        <div class="text-right"><p class="text-[10px] uppercase font-bold opacity-90">Pontos Restantes</p><p class="text-xl font-bold">1.250 pts</p></div>
+                    </div>
+                </div>
+                <h3 class="text-[10px] text-sub font-bold uppercase tracking-wider mb-3">Recompensas Disponíveis</h3>
+                <div class="space-y-3">
+                    <div class="glass-card rounded-xl p-4 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-dashboard-green/10 text-dashboard-green flex items-center justify-center">
+                                <i data-lucide="clock" class="w-5 h-5"></i>
+                            </div>
+                            <div><p class="text-sm font-bold text-main">1 Hora Grátis</p><p class="text-[10px] text-sub uppercase">Resgate agora</p></div>
+                        </div>
+                        <button class="bg-electric-blue text-white text-xs font-bold px-3 py-1.5 rounded-lg">500 pts</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: PERFIL -->
+            <section id="view-perfil" class="view-section hidden">
+                <h2 class="text-xl font-display font-bold text-main my-5">Seu Perfil</h2>
+                
+                <form id="form-perfil" onsubmit="salvarPerfilGeral(event)" class="glass-card rounded-2xl p-5 space-y-4">
+                    <div class="flex justify-center mb-6">
+                        <label for="perfil-foto-upload" class="cursor-pointer relative group">
+                            <div class="w-24 h-24 rounded-full bg-gray-200 dark:bg-auto-graphite flex items-center justify-center border-2 border-electric-blue overflow-hidden shadow-neon-blue">
+                                <img id="perfil-img-preview" src="" alt="" class="w-full h-full object-cover hidden">
+                                <i id="perfil-icon-placeholder" data-lucide="user" class="w-10 h-10 text-sub"></i>
+                            </div>
+                            <div class="absolute bottom-0 right-0 bg-electric-blue text-white p-1.5 rounded-full border-2 border-white dark:border-auto-black group-hover:scale-110 transition-transform">
+                                <i data-lucide="camera" class="w-4 h-4"></i>
+                            </div>
+                        </label>
+                        <input type="file" id="perfil-foto-upload" accept="image/*" onchange="previewFotoPerfil(event)">
+                    </div>
+
+                    <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Nome Completo</label><input type="text" id="perfil-nome" class="input-style bg-gray-50 dark:bg-auto-graphite"></div>
+                    <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Telefone</label><input type="tel" id="perfil-tel" class="input-style bg-gray-50 dark:bg-auto-graphite"></div>
+                    
+                    <div class="pt-4 border-t border-theme">
+                        <div class="flex justify-between items-center mb-3">
+                            <label class="text-[10px] text-sub font-bold uppercase tracking-wider">Meus Veículos</label>
+                            <button type="button" onclick="openVehicleModal()" class="text-[10px] text-electric-blue font-bold uppercase tracking-wider flex items-center gap-1">
+                                <i data-lucide="plus" class="w-3 h-3"></i> Adicionar
+                            </button>
+                        </div>
+                        <div id="perfil-lista-veiculos" class="space-y-2">
+                            <!-- Injetado via JS -->
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-electric-blue text-white font-bold py-4 rounded-xl mt-6 hover:bg-blue-600 transition-colors shadow-neon-blue text-sm">Salvar Perfil</button>
+                </form>
+            </section>
+
+        </main>
+
+        <!-- Navbar -->
+        <nav class="absolute bottom-0 w-full nav-bg px-2 pb-6 pt-3 flex justify-between items-end z-20">
+            <button onclick="navigate('inicio')" class="nav-btn active flex-1 flex flex-col items-center gap-1 text-main"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-[10px] font-bold">Início</span></button>
+            <button onclick="navigate('maps')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="map-pin" class="w-5 h-5"></i><span class="text-[10px] font-bold">Maps</span></button>
+            
+            <div class="flex-1 flex justify-center relative">
+                <button onclick="navigate('reserva')" class="absolute -top-10 bg-electric-blue text-white w-14 h-14 rounded-full flex items-center justify-center shadow-neon-blue hover:scale-105 transition-transform border-4 border-gray-100 dark:border-auto-black">
+                    <i data-lucide="plus" class="w-7 h-7"></i>
+                </button>
+            </div>
+
+            <button onclick="navigate('carteira')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[10px] font-bold">Carteira</span></button>
+            <button onclick="navigate('perfil')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] font-bold">Perfil</span></button>
+        </nav>
+
+        <!-- MODAIS -->
+        <div id="modal-horas" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+            <div class="app-bg border border-theme w-full max-w-sm rounded-3xl p-6 relative">
+                <button onclick="closeHoursModal()" class="absolute top-4 right-4 text-sub hover:text-sport-red"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <h3 class="text-xl font-display font-bold text-main mb-4 flex items-center gap-2"><i data-lucide="clock" class="text-electric-blue"></i> Horário de Funcionamento</h3>
+                <div class="space-y-2 text-sm text-main" id="hours-list"></div>
+            </div>
+        </div>
+
+        <div id="modal-veiculo" class="hidden absolute inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end">
+            <div class="app-bg border-t border-theme w-full rounded-t-3xl p-6 transform transition-transform">
+                <h3 class="text-xl font-display font-bold text-main mb-4">Adicionar Veículo</h3>
+                <form id="form-veiculo" onsubmit="salvarVeiculo(event)" class="space-y-4">
+                    <div>
+                        <label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Tipo de Veículo</label>
+                        <select id="v-tipo" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                            <option value="Carro">Carro (Passeio)</option>
+                            <option value="Caminhonete">Caminhonete / SUV</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Marca</label><input type="text" id="v-marca" required class="input-style bg-gray-50 dark:bg-auto-graphite" placeholder="Ex: BMW"></div>
+                        <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Modelo</label><input type="text" id="v-modelo" required class="input-style bg-gray-50 dark:bg-auto-graphite" placeholder="Ex: X1"></div>
+                    </div>
+                    <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Placa</label><input type="text" id="v-placa" required class="input-style bg-gray-50 dark:bg-auto-graphite uppercase" placeholder="ABC-1234"></div>
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closeVehicleModal()" class="flex-1 py-3.5 rounded-xl glass-card text-main font-bold text-sm">Cancelar</button>
+                        <button type="submit" class="flex-1 py-3.5 rounded-xl bg-electric-blue text-white font-bold text-sm">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const db = {
+            get: (key) => JSON.parse(localStorage.getItem(key)),
+            set: (key, data) => localStorage.setItem(key, JSON.stringify(data))
+        };
+        
+        if(!db.get('app_perfil')) db.set('app_perfil', { nome: 'Fabiano', tel: '', foto: '' });
+        if(!db.get('app_veiculos')) db.set('app_veiculos', [{id: 1, tipo: 'Carro', marca: 'Luna', modelo: 'BMW X1', placa: 'ABC-1234'}]);
+        if(!db.get('app_reservas_feitas')) db.set('app_reservas_feitas', []);
+
+        const branches = [
+            { id: 1, name: 'AutoPrime Park - Matriz', totalVagas: 150, currentVagas: 42, address: 'Av. Paulista, 1000 - Bela Vista, São Paulo - SP', phone: '(11) 98765-4321', link: 'Avenida+Paulista,+1000,+Sao+Paulo', hours: { seg: '06:00 - 23:00', ter: '06:00 - 23:00', qua: '06:00 - 23:00', qui: '06:00 - 23:00', sex: '06:00 - 00:00', sab: '08:00 - 00:00', dom: 'Fechado' } },
+            { id: 2, name: 'AutoPrime - Sul Shopping', totalVagas: 80, currentVagas: 12, address: 'Av. Berrini, 500 - Itaim, São Paulo - SP', phone: '(11) 91111-2222', link: 'Avenida+Berrini,+500,+Sao+Paulo', hours: { seg: '10:00 - 22:00', ter: '10:00 - 22:00', qua: '10:00 - 22:00', qui: '10:00 - 22:00', sex: '10:00 - 22:00', sab: '10:00 - 22:00', dom: '12:00 - 20:00' } },
+            { id: 3, name: 'AutoPrime - Aeroporto', totalVagas: 300, currentVagas: 145, address: 'Rod. Hélio Smidt, s/n - Guarulhos - SP', phone: '(11) 93333-4444', link: 'Rodovia+Helio+Smidt,+Guarulhos', hours: { seg: '24 Horas', ter: '24 Horas', qua: '24 Horas', qui: '24 Horas', sex: '24 Horas', sab: '24 Horas', dom: '24 Horas' } }
+        ];
+
+        let activeBranch = branches[0];
+
+        function changeBranch() {
+            const val = document.getElementById('branch-selector').value;
+            activeBranch = branches.find(b => b.id == val);
+            
+            document.getElementById('vagas-counter').innerText = activeBranch.currentVagas;
+            
+            // Controle dinâmico de Cores da Barra de Ocupação (Verde, Amarelo e Vermelho)
+            const occupied = activeBranch.totalVagas - activeBranch.currentVagas;
+            const percentage = Math.round((occupied / activeBranch.totalVagas) * 100);
+            
+            const rateLabel = document.getElementById('occupancy-rate');
+            const bar = document.getElementById('occupancy-bar');
+            
+            rateLabel.innerText = percentage + '%';
+            bar.style.width = percentage + '%';
+            
+            let colorClass = 'bg-dashboard-green text-dashboard-green'; // 0 a 40%
+            if (percentage > 60) {
+                colorClass = 'bg-sport-red text-sport-red'; // 61% ou mais
+            } else if (percentage >= 41) {
+                colorClass = 'bg-yellow-500 text-yellow-500'; // 41 a 60%
+            }
+            
+            bar.className = `h-1.5 rounded-full transition-all duration-1000 ${colorClass.split(' ')[0]}`;
+            rateLabel.className = `font-bold ${colorClass.split(' ')[1]}`;
+
+            document.getElementById('maps-name').innerText = activeBranch.name;
+            document.getElementById('maps-label').innerText = activeBranch.name.split('-')[0];
+            document.getElementById('maps-address').innerText = activeBranch.address;
+            document.getElementById('maps-phone').innerText = activeBranch.phone;
+            document.getElementById('maps-link').href = `https://www.google.com/maps/dir/?api=1&destination=${activeBranch.link}`;
+
+            const diaHoje = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'][new Date().getDay()];
+            document.getElementById('current-hours').innerText = `Aberto Hoje: ${activeBranch.hours[diaHoje]}`;
+        }
+
+        function openHoursModal() {
+            const list = document.getElementById('hours-list');
+            list.innerHTML = '';
+            const dias = { seg: 'Segunda-feira', ter: 'Terça-feira', qua: 'Quarta-feira', qui: 'Quinta-feira', sex: 'Sexta-feira', sab: 'Sábado', dom: 'Domingo' };
+            const hojeKey = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'][new Date().getDay()];
+            
+            for(const [key, label] of Object.entries(dias)) {
+                const isToday = key === hojeKey;
+                list.innerHTML += `
+                    <div class="flex justify-between items-center py-2 border-b border-theme ${isToday ? 'text-electric-blue font-bold' : ''}">
+                        <span>${label} ${isToday ? '(Hoje)' : ''}</span>
+                        <span>${activeBranch.hours[key]}</span>
+                    </div>
+                `;
+            }
+            document.getElementById('modal-horas').classList.remove('hidden');
+        }
+        function closeHoursModal() { document.getElementById('modal-horas').classList.add('hidden'); }
+
+        function navigate(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => { el.classList.remove('block'); el.classList.add('hidden'); });
+            document.getElementById(`view-${viewId}`).classList.remove('hidden'); document.getElementById(`view-${viewId}`).classList.add('block');
+            
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach((btn, index) => { if(index !== 2) { btn.classList.remove('text-main'); btn.classList.add('text-sub'); } });
+            const navMap = { 'inicio': 0, 'maps': 1, 'carteira': 3, 'perfil': 4 };
+            if(navMap[viewId] !== undefined) { navBtns[navMap[viewId]].classList.remove('text-sub'); navBtns[navMap[viewId]].classList.add('text-main'); }
+            
+            if(viewId === 'reserva') loadReservaData();
+            if(viewId === 'perfil') loadPerfil();
+            if(viewId === 'inicio') loadHomeReservations();
+        }
+
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let msg = hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
+            document.getElementById('saudacao').innerText = `${msg}, Fabiano`;
+        }
+        
+        function initTheme() {
+            const isDark = localStorage.getItem('theme') !== 'light';
+            if(isDark) document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
+        }
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        function loadPerfil() {
+            const p = db.get('app_perfil');
+            document.getElementById('perfil-nome').value = p.nome;
+            document.getElementById('perfil-tel').value = p.tel;
+            if(p.foto) {
+                document.getElementById('perfil-img-preview').src = p.foto;
+                document.getElementById('perfil-img-preview').classList.remove('hidden');
+                document.getElementById('perfil-icon-placeholder').classList.add('hidden');
+            }
+            renderVeiculosList('perfil-lista-veiculos');
+        }
+
+        function previewFotoPerfil(event) {
+            const file = event.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result;
+                    document.getElementById('perfil-img-preview').src = base64;
+                    document.getElementById('perfil-img-preview').classList.remove('hidden');
+                    document.getElementById('perfil-icon-placeholder').classList.add('hidden');
+                    
+                    const p = db.get('app_perfil');
+                    p.foto = base64;
+                    db.set('app_perfil', p);
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function salvarPerfilGeral(e) {
+            e.preventDefault();
+            const p = db.get('app_perfil');
+            p.nome = document.getElementById('perfil-nome').value;
+            p.tel = document.getElementById('perfil-tel').value;
+            db.set('app_perfil', p);
+            alert("Perfil salvo!");
+        }
+
+        function renderVeiculosList(containerId) {
+            const vs = db.get('app_veiculos');
+            const c = document.getElementById(containerId);
+            if(!c) return;
+            c.innerHTML = vs.length ? '' : '<p class="text-xs text-sub italic">Nenhum veículo.</p>';
+            vs.forEach(v => {
+                c.innerHTML += `
+                    <div class="glass-card p-3 rounded-xl flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-gray-100 dark:bg-auto-graphite rounded-full flex items-center justify-center border border-theme">
+                                <i data-lucide="${v.tipo === 'Carro' ? 'car' : 'truck'}" class="w-4 h-4 text-main"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-main">${v.marca} ${v.modelo}</p>
+                                <p class="text-[9px] font-display uppercase text-sub">${v.placa}</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="removeVeiculo(${v.id})" class="text-sport-red"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function openVehicleModal() { document.getElementById('modal-veiculo').classList.remove('hidden'); }
+        function closeVehicleModal() { document.getElementById('modal-veiculo').classList.add('hidden'); }
+        
+        function salvarVeiculo(e) {
+            e.preventDefault();
+            const vs = db.get('app_veiculos');
+            vs.push({
+                id: Date.now(),
+                tipo: document.getElementById('v-tipo').value,
+                marca: document.getElementById('v-marca').value,
+                modelo: document.getElementById('v-modelo').value,
+                placa: document.getElementById('v-placa').value.toUpperCase()
+            });
+            db.set('app_veiculos', vs);
+            document.getElementById('form-veiculo').reset();
+            closeVehicleModal();
+            loadPerfil();
+            loadReservaData();
+        }
+
+        function removeVeiculo(id) {
+            if(confirm('Remover veículo?')) {
+                db.set('app_veiculos', db.get('app_veiculos').filter(v => v.id !== id));
+                loadPerfil();
+                loadReservaData();
+            }
+        }
+
+        function toggleFiltrosReserva() {
+            const tipo = document.getElementById('tipo-reserva').value;
+            if (tipo === 'hora') {
+                document.getElementById('container-hora').classList.remove('hidden');
+                document.getElementById('container-dia').classList.add('hidden');
+            } else {
+                document.getElementById('container-hora').classList.add('hidden');
+                document.getElementById('container-dia').classList.remove('hidden');
+            }
+            calcularValorReserva();
+        }
+
+        function loadReservaData() {
+            const select = document.getElementById('reserva-veiculo');
+            const vs = db.get('app_veiculos');
+            select.innerHTML = vs.length ? vs.map(v => `<option value="${v.placa}">${v.marca} ${v.modelo} (${v.placa})</option>`).join('') : '<option value="">Cadastre um veículo primeiro</option>';
+            calcularValorReserva();
+        }
+
+        function calcularValorReserva() {
+            const tipo = document.getElementById('tipo-reserva').value;
+            let total = 0;
+            
+            if (tipo === 'hora') {
+                const data = document.getElementById('res-data').value;
+                const hIni = document.getElementById('res-hora-ini').value;
+                const hFim = document.getElementById('res-hora-fim').value;
+                if(data && hIni && hFim) {
+                    const start = new Date(`${data}T${hIni}`);
+                    const end = new Date(`${data}T${hFim}`);
+                    let diffMs = end - start;
+                    if(diffMs > 0) {
+                        let hours = diffMs / (1000 * 60 * 60);
+                        total = Math.ceil(hours) * 15;
+                    }
+                }
+            } else {
+                const dIni = document.getElementById('res-dia-ini').value;
+                const dFim = document.getElementById('res-dia-fim').value;
+                if(dIni && dFim) {
+                    const start = new Date(`${dIni}T00:00:00`);
+                    const end = new Date(`${dFim}T00:00:00`);
+                    let diffMs = end - start;
+                    if(diffMs >= 0) {
+                        let days = (diffMs / (1000 * 60 * 60 * 24)) + 1;
+                        total = days * 45;
+                    }
+                }
+            }
+            
+            document.getElementById('valor-simulado').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+
+        function confirmarAgendamento() {
+            const veiculo = document.getElementById('reserva-veiculo').value;
+            const tipo = document.getElementById('tipo-reserva').value;
+            const valor = document.getElementById('valor-simulado').innerText;
+            if(!veiculo) return alert("Cadastre um veículo!");
+            if(valor === "R$ 0,00") return alert("Selecione um período válido!");
+
+            const novaReserva = {
+                id: Date.now(),
+                filial: activeBranch.name,
+                veiculo: veiculo,
+                valor: valor,
+                data: tipo === 'hora' ? `${document.getElementById('res-data').value} (${document.getElementById('res-hora-ini').value})` : `Diária: ${document.getElementById('res-dia-ini').value}`
+            };
+
+            const reservas = db.get('app_reservas_feitas');
+            reservas.push(novaReserva);
+            db.set('app_reservas_feitas', reservas);
+
+            alert("Vaga Agendada com Sucesso!");
+            navigate('inicio');
+        }
+
+        function loadHomeReservations() {
+            const list = document.getElementById('home-reservas-list');
+            const reservas = db.get('app_reservas_feitas');
+            list.innerHTML = '';
+            
+            if(reservas.length === 0) {
+                list.innerHTML = `<div class="glass-card rounded-xl p-4 opacity-60"><p class="text-xs text-sub italic">Nenhuma reserva agendada.</p></div>`;
+                return;
+            }
+
+            reservas.reverse().forEach(r => {
+                let df = r.data;
+                list.innerHTML += `
+                    <div class="glass-card rounded-xl p-4 flex justify-between items-center border-l-2 border-l-dashboard-green">
+                        <div>
+                            <p class="text-xs font-bold text-main flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-sport-red"></i> ${r.filial.split('-')[0]}</p>
+                            <p class="text-[10px] text-sub mt-1"><span class="font-bold text-electric-blue">${df}</span> • Placa: ${r.veiculo}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-sub uppercase">Total</p>
+                            <p class="text-sm font-bold text-dashboard-green">${r.valor}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        setGreeting();
+        initTheme();
+        changeBranch();
+        loadHomeReservations();
+
+    </script>
+</body>
+</html>
