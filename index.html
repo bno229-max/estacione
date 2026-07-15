@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SaaS Estacionamento - PWA</title>
+    <title>AutoPrime SaaS</title>
+    
+    <!-- Configurações PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon" href="icon.svg">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -39,31 +46,21 @@
     </script>
     <style>
         body { transition: background-color 0.3s, color 0.3s; }
-        
         .app-bg { background-color: #f3f4f6; }
         .text-main { color: #111827; }
         .text-sub { color: #6b7280; }
         .border-theme { border-color: #e5e7eb; }
-        .glass-card {
-            background-color: #ffffff;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
+        .glass-card { background-color: #ffffff; border: 1px solid #e5e7eb; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .nav-bg { background-color: #ffffff; }
 
         .dark .app-bg { background-color: #000000; }
         .dark .text-main { color: #ffffff; }
         .dark .text-sub { color: #a4b0be; }
         .dark .border-theme { border-color: #222222; }
-        .dark .glass-card {
-            background-color: #111111;
-            border: 1px solid #222222;
-            box-shadow: none;
-        }
+        .dark .glass-card { background-color: #111111; border: 1px solid #222222; box-shadow: none; }
         .dark .nav-bg { background-color: #0a0a0a; border-top: 1px solid #222222; }
 
         .input-style { @apply w-full bg-transparent border border-gray-300 dark:border-auto-metal text-gray-900 dark:text-pure-white rounded-lg px-4 py-3 outline-none focus:border-electric-blue transition-colors; }
-        
         ::-webkit-scrollbar { display: none; }
         input[type="file"] { display: none; }
     </style>
@@ -75,9 +72,7 @@
         <!-- Header -->
         <header class="p-6 pb-2 z-10">
             <div class="flex justify-between items-center mb-1">
-                <div>
-                    <h1 class="text-2xl font-display font-bold text-main" id="saudacao">Olá, Fabiano</h1>
-                </div>
+                <div><h1 class="text-2xl font-display font-bold text-main" id="saudacao">Olá, Fabiano</h1></div>
                 <div class="flex items-center gap-3">
                     <button onclick="toggleTheme()" class="text-sub hover:text-electric-blue transition-colors">
                         <i data-lucide="sun" id="icon-sun" class="w-6 h-6 hidden dark:block"></i>
@@ -89,9 +84,7 @@
                     </button>
                 </div>
             </div>
-            <!-- Subtítulo de organização mantido -->
-            <div class="text-[10px] text-electric-blue uppercase tracking-widest font-bold flex items-center gap-1 mt-1">
-            </div>
+            <div class="text-[10px] text-electric-blue uppercase tracking-widest font-bold flex items-center gap-1 mt-1"></div>
         </header>
 
         <!-- Main Content -->
@@ -99,7 +92,6 @@
             
             <!-- VIEW: INÍCIO -->
             <section id="view-inicio" class="view-section block">
-                
                 <div class="flex items-center gap-3 mt-4 mb-4">
                     <div class="w-12 h-12 rounded-lg bg-electric-blue flex flex-shrink-0 items-center justify-center text-white shadow-neon-blue">
                         <i data-lucide="parking-circle" class="w-7 h-7"></i>
@@ -113,10 +105,8 @@
                             </select>
                             <i data-lucide="chevron-down" class="w-4 h-4 text-sub absolute right-0 z-0"></i>
                         </div>
-                        
                         <button onclick="openHoursModal()" class="text-xs text-dashboard-green font-medium flex items-center gap-1 hover:opacity-80 transition-opacity w-full text-left">
-                            <i data-lucide="clock" class="w-3 h-3 flex-shrink-0"></i> 
-                            <span id="current-hours">Aberto Hoje: 06:00 às 23:00</span>
+                            <i data-lucide="clock" class="w-3 h-3 flex-shrink-0"></i> <span id="current-hours">Aberto Hoje: 06:00 às 23:00</span>
                             <i data-lucide="info" class="w-3 h-3 ml-1 text-sub"></i>
                         </button>
                     </div>
@@ -125,15 +115,10 @@
                 <div class="glass-card rounded-2xl p-6 mb-2 text-center relative overflow-hidden">
                     <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-dashboard-green to-transparent opacity-50"></div>
                     <p class="text-[10px] text-sub font-bold mb-2 uppercase tracking-wide">Vagas Disponíveis Agora</p>
-                    <div class="text-7xl font-display font-bold text-dashboard-green drop-shadow-neon-green transition-all duration-500 leading-none mb-3" id="vagas-counter">
-                        --
-                    </div>
-                    <p class="text-[10px] text-sub flex items-center justify-center gap-1">
-                        <span class="w-1.5 h-1.5 rounded-full bg-dashboard-green animate-pulse"></span> Sincronizado ao vivo
-                    </p>
+                    <div class="text-7xl font-display font-bold text-green-700 dark:text-green-600 transition-all duration-500 leading-none mb-3" id="vagas-counter">--</div>
+                    <p class="text-[10px] text-sub flex items-center justify-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-dashboard-green animate-pulse"></span> Acompanhamento Online</p>
                 </div>
 
-                <!-- Barra de Ocupação com cores dinâmicas -->
                 <div class="mb-5 px-2">
                     <div class="flex justify-between text-[10px] font-bold uppercase tracking-wider mb-1">
                         <span class="text-sub">Taxa de Ocupação</span>
@@ -144,44 +129,24 @@
                     </div>
                 </div>
 
-                <!-- NOVO: Tabela de Preços na Início -->
-                <div class="mt-6 mb-6">
-                    <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="tags" class="w-4 h-4 text-electric-blue"></i> Tabela de Preços
-                    </h3>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-electric-blue">
-                            <p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Hora</p>
-                            <p class="text-lg font-display font-bold text-main">R$ 15</p>
-                        </div>
-                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-dashboard-green">
-                            <p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Diária</p>
-                            <p class="text-lg font-display font-bold text-main">R$ 45</p>
-                        </div>
-                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-sport-red">
-                            <p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Mês</p>
-                            <p class="text-lg font-display font-bold text-main">R$ 350</p>
-                        </div>
-                    </div>
+                <div class="glass-card rounded-2xl p-5 mb-5 flex justify-between items-end border-t border-t-electric-blue/30">
+                    <div><p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Seu Cashback</p><p class="text-2xl font-display font-bold text-main">R$ 45,00</p></div>
+                    <div class="text-right"><p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Pontos</p><p class="text-xl font-display font-bold text-black dark:text-white">1.250</p></div>
                 </div>
 
-                <div class="glass-card rounded-2xl p-5 mb-5 flex justify-between items-end border-t border-t-electric-blue/30">
-                    <div>
-                        <p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Seu Cashback</p>
-                        <p class="text-2xl font-display font-bold text-main">R$ 45,00</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] text-sub font-bold uppercase tracking-wider mb-1">Pontos</p>
-                        <p class="text-xl font-display font-bold text-electric-blue">1.250</p>
+                <div class="mt-6 mb-6">
+                    <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2"><i data-lucide="tags" class="w-4 h-4 text-electric-blue"></i> Tabela de Preços</h3>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-electric-blue"><p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Hora</p><p class="text-lg font-display font-bold text-main">R$ 15</p></div>
+                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-electric-blue"><p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Diária</p><p class="text-lg font-display font-bold text-main">R$ 45</p></div>
+                        <div class="glass-card rounded-xl p-3 text-center border-t-2 border-t-electric-blue"><p class="text-[10px] text-sub uppercase font-bold tracking-wider mb-1">Mês</p><p class="text-lg font-display font-bold text-main">R$ 350</p></div>
                     </div>
                 </div>
 
                 <div class="mt-8">
-                    <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="calendar-check" class="w-4 h-4 text-electric-blue"></i> Suas Reservas Ativas
-                    </h3>
+                    <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2"><i data-lucide="calendar-check" class="w-4 h-4 text-electric-blue"></i> Suas Reservas Ativas</h3>
                     <div id="home-reservas-list" class="space-y-3">
-                        <!-- Injetado via JS -->
+                        <!-- Injetado via JS com Cronômetro -->
                     </div>
                 </div>
             </section>
@@ -197,20 +162,11 @@
                     <div class="p-5 space-y-4">
                         <div>
                             <h3 class="text-lg font-bold text-main" id="maps-name">AutoPrime Park - Matriz</h3>
-                            <p class="text-xs text-sub mt-2 flex items-start gap-2">
-                                <i data-lucide="map-pin" class="w-5 h-5 text-sport-red flex-shrink-0"></i>
-                                <span id="maps-address">Av. Paulista, 1000 - Bela Vista, São Paulo - SP</span>
-                            </p>
+                            <p class="text-xs text-sub mt-2 flex items-start gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-sport-red flex-shrink-0"></i> <span id="maps-address">Av. Paulista, 1000 - Bela Vista, São Paulo - SP</span></p>
                         </div>
                         <div class="grid grid-cols-2 gap-4 border-t border-theme pt-4">
-                            <div>
-                                <p class="text-[10px] text-sub font-bold uppercase">Telefone</p>
-                                <p class="text-sm font-bold text-main" id="maps-phone">(11) 98765-4321</p>
-                            </div>
-                            <div>
-                                <p class="text-[10px] text-sub font-bold uppercase">E-mail</p>
-                                <p class="text-sm font-bold text-main truncate">contato@autoprime.com</p>
-                            </div>
+                            <div><p class="text-[10px] text-sub font-bold uppercase">Telefone</p><p class="text-sm font-bold text-main" id="maps-phone">(11) 98765-4321</p></div>
+                            <div><p class="text-[10px] text-sub font-bold uppercase">E-mail</p><p class="text-sm font-bold text-main truncate">contato@autoprime.com</p></div>
                         </div>
                         <a id="maps-link" href="#" target="_blank" class="w-full bg-electric-blue text-white font-bold py-3.5 rounded-xl mt-4 flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors shadow-neon-blue text-sm">
                             <i data-lucide="navigation" class="w-5 h-5"></i> Como Chegar (Google Maps)
@@ -238,9 +194,11 @@
                         <select id="tipo-reserva" class="input-style bg-gray-50 dark:bg-auto-graphite" onchange="toggleFiltrosReserva()">
                             <option value="hora">Por Hora (R$ 15,00 / hora)</option>
                             <option value="dia">Por Dia (R$ 45,00 / diária)</option>
+                            <option value="mes">Mensal (R$ 350,00 / mês)</option>
                         </select>
                     </div>
 
+                    <!-- Campos Hora -->
                     <div id="container-hora" class="grid grid-cols-2 gap-4">
                         <div class="col-span-2">
                             <label class="text-[10px] text-sub font-bold uppercase block mb-1">Data</label>
@@ -256,6 +214,7 @@
                         </div>
                     </div>
 
+                    <!-- Campos Dia -->
                     <div id="container-dia" class="grid grid-cols-2 gap-4 hidden">
                         <div>
                             <label class="text-[10px] text-sub font-bold uppercase block mb-1">Dia Inicial</label>
@@ -264,6 +223,18 @@
                         <div>
                             <label class="text-[10px] text-sub font-bold uppercase block mb-1">Dia Final</label>
                             <input type="date" id="res-dia-fim" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                    </div>
+
+                    <!-- Campos Mês -->
+                    <div id="container-mes" class="grid grid-cols-2 gap-4 hidden">
+                        <div>
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Data de Início</label>
+                            <input type="date" id="res-mes-ini" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-sub font-bold uppercase block mb-1">Qtd. de Meses</label>
+                            <input type="number" id="res-mes-qtd" value="1" min="1" onchange="calcularValorReserva()" class="input-style bg-gray-50 dark:bg-auto-graphite">
                         </div>
                     </div>
 
@@ -280,28 +251,15 @@
 
             <!-- VIEW: CARTEIRA -->
             <section id="view-carteira" class="view-section hidden">
+                <!-- ... mantido sem alterações para o espaço do PWA ... -->
                 <h2 class="text-xl font-display font-bold text-main my-5">Programa de Fidelidade</h2>
-                <div class="bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-300 rounded-2xl p-6 text-white mb-6 relative overflow-hidden shadow-lg border border-yellow-400/50">
-                    <div class="absolute right-[-20px] top-[-20px] opacity-20">
-                        <i data-lucide="award" class="w-32 h-32"></i>
-                    </div>
+                <div class="bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-300 rounded-2xl p-6 text-white mb-6 relative overflow-hidden shadow-lg">
+                    <div class="absolute right-[-20px] top-[-20px] opacity-20"><i data-lucide="award" class="w-32 h-32"></i></div>
                     <p class="text-xs font-bold uppercase tracking-widest mb-1 opacity-90">Seu Nível Atual</p>
                     <h3 class="text-3xl font-display font-bold mb-4 drop-shadow-md">Nível Ouro</h3>
                     <div class="flex justify-between items-end">
                         <div><p class="text-[10px] uppercase font-bold opacity-90">Cashback</p><p class="text-xl font-bold">R$ 45,00</p></div>
-                        <div class="text-right"><p class="text-[10px] uppercase font-bold opacity-90">Pontos Restantes</p><p class="text-xl font-bold">1.250 pts</p></div>
-                    </div>
-                </div>
-                <h3 class="text-[10px] text-sub font-bold uppercase tracking-wider mb-3">Recompensas Disponíveis</h3>
-                <div class="space-y-3">
-                    <div class="glass-card rounded-xl p-4 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-dashboard-green/10 text-dashboard-green flex items-center justify-center">
-                                <i data-lucide="clock" class="w-5 h-5"></i>
-                            </div>
-                            <div><p class="text-sm font-bold text-main">1 Hora Grátis</p><p class="text-[10px] text-sub uppercase">Resgate agora</p></div>
-                        </div>
-                        <button class="bg-electric-blue text-white text-xs font-bold px-3 py-1.5 rounded-lg">500 pts</button>
+                        <div class="text-right"><p class="text-[10px] uppercase font-bold opacity-90">Pontos</p><p class="text-xl font-bold">1.250 pts</p></div>
                     </div>
                 </div>
             </section>
@@ -309,7 +267,6 @@
             <!-- VIEW: PERFIL -->
             <section id="view-perfil" class="view-section hidden">
                 <h2 class="text-xl font-display font-bold text-main my-5">Seu Perfil</h2>
-                
                 <form id="form-perfil" onsubmit="salvarPerfilGeral(event)" class="glass-card rounded-2xl p-5 space-y-4">
                     <div class="flex justify-center mb-6">
                         <label for="perfil-foto-upload" class="cursor-pointer relative group">
@@ -323,10 +280,8 @@
                         </label>
                         <input type="file" id="perfil-foto-upload" accept="image/*" onchange="previewFotoPerfil(event)">
                     </div>
-
                     <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Nome Completo</label><input type="text" id="perfil-nome" class="input-style bg-gray-50 dark:bg-auto-graphite"></div>
                     <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Telefone</label><input type="tel" id="perfil-tel" class="input-style bg-gray-50 dark:bg-auto-graphite"></div>
-                    
                     <div class="pt-4 border-t border-theme">
                         <div class="flex justify-between items-center mb-3">
                             <label class="text-[10px] text-sub font-bold uppercase tracking-wider">Meus Veículos</label>
@@ -334,11 +289,8 @@
                                 <i data-lucide="plus" class="w-3 h-3"></i> Adicionar
                             </button>
                         </div>
-                        <div id="perfil-lista-veiculos" class="space-y-2">
-                            <!-- Injetado via JS -->
-                        </div>
+                        <div id="perfil-lista-veiculos" class="space-y-2"></div>
                     </div>
-
                     <button type="submit" class="w-full bg-electric-blue text-white font-bold py-4 rounded-xl mt-6 hover:bg-blue-600 transition-colors shadow-neon-blue text-sm">Salvar Perfil</button>
                 </form>
             </section>
@@ -349,13 +301,7 @@
         <nav class="absolute bottom-0 w-full nav-bg px-2 pb-6 pt-3 flex justify-between items-end z-20">
             <button onclick="navigate('inicio')" class="nav-btn active flex-1 flex flex-col items-center gap-1 text-main"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-[10px] font-bold">Início</span></button>
             <button onclick="navigate('maps')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="map-pin" class="w-5 h-5"></i><span class="text-[10px] font-bold">Maps</span></button>
-            
-            <div class="flex-1 flex justify-center relative">
-                <button onclick="navigate('reserva')" class="absolute -top-10 bg-electric-blue text-white w-14 h-14 rounded-full flex items-center justify-center shadow-neon-blue hover:scale-105 transition-transform border-4 border-gray-100 dark:border-auto-black">
-                    <i data-lucide="plus" class="w-7 h-7"></i>
-                </button>
-            </div>
-
+            <div class="flex-1 flex justify-center relative"><button onclick="navigate('reserva')" class="absolute -top-10 bg-electric-blue text-white w-14 h-14 rounded-full flex items-center justify-center shadow-neon-blue hover:scale-105 transition-transform border-4 border-gray-100 dark:border-auto-black"><i data-lucide="plus" class="w-7 h-7"></i></button></div>
             <button onclick="navigate('carteira')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="wallet" class="w-5 h-5"></i><span class="text-[10px] font-bold">Carteira</span></button>
             <button onclick="navigate('perfil')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] font-bold">Perfil</span></button>
         </nav>
@@ -375,10 +321,7 @@
                 <form id="form-veiculo" onsubmit="salvarVeiculo(event)" class="space-y-4">
                     <div>
                         <label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Tipo de Veículo</label>
-                        <select id="v-tipo" class="input-style bg-gray-50 dark:bg-auto-graphite">
-                            <option value="Carro">Carro (Passeio)</option>
-                            <option value="Caminhonete">Caminhonete / SUV</option>
-                        </select>
+                        <select id="v-tipo" class="input-style bg-gray-50 dark:bg-auto-graphite"><option value="Carro">Carro (Passeio)</option><option value="Caminhonete">Caminhonete / SUV</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Marca</label><input type="text" id="v-marca" required class="input-style bg-gray-50 dark:bg-auto-graphite" placeholder="Ex: BMW"></div>
@@ -392,7 +335,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 
     <script>
@@ -408,9 +350,9 @@
         if(!db.get('app_reservas_feitas')) db.set('app_reservas_feitas', []);
 
         const branches = [
-            { id: 1, name: 'AutoPrime Park - Matriz', totalVagas: 150, currentVagas: 42, address: 'Av. Paulista, 1000 - Bela Vista, São Paulo - SP', phone: '(11) 98765-4321', link: 'Avenida+Paulista,+1000,+Sao+Paulo', hours: { seg: '06:00 - 23:00', ter: '06:00 - 23:00', qua: '06:00 - 23:00', qui: '06:00 - 23:00', sex: '06:00 - 00:00', sab: '08:00 - 00:00', dom: 'Fechado' } },
-            { id: 2, name: 'AutoPrime - Sul Shopping', totalVagas: 80, currentVagas: 12, address: 'Av. Berrini, 500 - Itaim, São Paulo - SP', phone: '(11) 91111-2222', link: 'Avenida+Berrini,+500,+Sao+Paulo', hours: { seg: '10:00 - 22:00', ter: '10:00 - 22:00', qua: '10:00 - 22:00', qui: '10:00 - 22:00', sex: '10:00 - 22:00', sab: '10:00 - 22:00', dom: '12:00 - 20:00' } },
-            { id: 3, name: 'AutoPrime - Aeroporto', totalVagas: 300, currentVagas: 145, address: 'Rod. Hélio Smidt, s/n - Guarulhos - SP', phone: '(11) 93333-4444', link: 'Rodovia+Helio+Smidt,+Guarulhos', hours: { seg: '24 Horas', ter: '24 Horas', qua: '24 Horas', qui: '24 Horas', sex: '24 Horas', sab: '24 Horas', dom: '24 Horas' } }
+            { id: 1, name: 'AutoPrime Park - Matriz', totalVagas: 150, currentVagas: 42, address: 'Av. Paulista, 1000 - SP', phone: '(11) 98765-4321', link: 'Avenida+Paulista,+1000,+Sao+Paulo', hours: { seg: '06:00 - 23:00', ter: '06:00 - 23:00', qua: '06:00 - 23:00', qui: '06:00 - 23:00', sex: '06:00 - 00:00', sab: '08:00 - 00:00', dom: 'Fechado' } },
+            { id: 2, name: 'AutoPrime - Sul Shopping', totalVagas: 80, currentVagas: 12, address: 'Av. Berrini, 500 - SP', phone: '(11) 91111-2222', link: 'Avenida+Berrini,+500,+Sao+Paulo', hours: { seg: '10:00 - 22:00', ter: '10:00 - 22:00', qua: '10:00 - 22:00', qui: '10:00 - 22:00', sex: '10:00 - 22:00', sab: '10:00 - 22:00', dom: '12:00 - 20:00' } },
+            { id: 3, name: 'AutoPrime - Aeroporto', totalVagas: 300, currentVagas: 145, address: 'Rod. Hélio Smidt, s/n - SP', phone: '(11) 93333-4444', link: 'Rodovia+Helio+Smidt,+Guarulhos', hours: { seg: '24 Horas', ter: '24 Horas', qua: '24 Horas', qui: '24 Horas', sex: '24 Horas', sab: '24 Horas', dom: '24 Horas' } }
         ];
 
         let activeBranch = branches[0];
@@ -418,25 +360,19 @@
         function changeBranch() {
             const val = document.getElementById('branch-selector').value;
             activeBranch = branches.find(b => b.id == val);
-            
             document.getElementById('vagas-counter').innerText = activeBranch.currentVagas;
             
-            // Controle dinâmico de Cores da Barra de Ocupação (Verde, Amarelo e Vermelho)
             const occupied = activeBranch.totalVagas - activeBranch.currentVagas;
             const percentage = Math.round((occupied / activeBranch.totalVagas) * 100);
-            
             const rateLabel = document.getElementById('occupancy-rate');
             const bar = document.getElementById('occupancy-bar');
             
             rateLabel.innerText = percentage + '%';
             bar.style.width = percentage + '%';
             
-            let colorClass = 'bg-dashboard-green text-dashboard-green'; // 0 a 40%
-            if (percentage > 60) {
-                colorClass = 'bg-sport-red text-sport-red'; // 61% ou mais
-            } else if (percentage >= 41) {
-                colorClass = 'bg-yellow-500 text-yellow-500'; // 41 a 60%
-            }
+            let colorClass = 'bg-dashboard-green text-dashboard-green'; 
+            if (percentage > 60) colorClass = 'bg-sport-red text-sport-red'; 
+            else if (percentage >= 41) colorClass = 'bg-yellow-500 text-yellow-500'; 
             
             bar.className = `h-1.5 rounded-full transition-all duration-1000 ${colorClass.split(' ')[0]}`;
             rateLabel.className = `font-bold ${colorClass.split(' ')[1]}`;
@@ -456,15 +392,9 @@
             list.innerHTML = '';
             const dias = { seg: 'Segunda-feira', ter: 'Terça-feira', qua: 'Quarta-feira', qui: 'Quinta-feira', sex: 'Sexta-feira', sab: 'Sábado', dom: 'Domingo' };
             const hojeKey = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'][new Date().getDay()];
-            
             for(const [key, label] of Object.entries(dias)) {
                 const isToday = key === hojeKey;
-                list.innerHTML += `
-                    <div class="flex justify-between items-center py-2 border-b border-theme ${isToday ? 'text-electric-blue font-bold' : ''}">
-                        <span>${label} ${isToday ? '(Hoje)' : ''}</span>
-                        <span>${activeBranch.hours[key]}</span>
-                    </div>
-                `;
+                list.innerHTML += `<div class="flex justify-between items-center py-2 border-b border-theme ${isToday ? 'text-electric-blue font-bold' : ''}"><span>${label} ${isToday ? '(Hoje)' : ''}</span><span>${activeBranch.hours[key]}</span></div>`;
             }
             document.getElementById('modal-horas').classList.remove('hidden');
         }
@@ -521,7 +451,6 @@
                     document.getElementById('perfil-img-preview').src = base64;
                     document.getElementById('perfil-img-preview').classList.remove('hidden');
                     document.getElementById('perfil-icon-placeholder').classList.add('hidden');
-                    
                     const p = db.get('app_perfil');
                     p.foto = base64;
                     db.set('app_perfil', p);
@@ -545,20 +474,7 @@
             if(!c) return;
             c.innerHTML = vs.length ? '' : '<p class="text-xs text-sub italic">Nenhum veículo.</p>';
             vs.forEach(v => {
-                c.innerHTML += `
-                    <div class="glass-card p-3 rounded-xl flex items-center justify-between mb-2">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-gray-100 dark:bg-auto-graphite rounded-full flex items-center justify-center border border-theme">
-                                <i data-lucide="${v.tipo === 'Carro' ? 'car' : 'truck'}" class="w-4 h-4 text-main"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-main">${v.marca} ${v.modelo}</p>
-                                <p class="text-[9px] font-display uppercase text-sub">${v.placa}</p>
-                            </div>
-                        </div>
-                        <button type="button" onclick="removeVeiculo(${v.id})" class="text-sport-red"><i data-lucide="trash" class="w-4 h-4"></i></button>
-                    </div>
-                `;
+                c.innerHTML += `<div class="glass-card p-3 rounded-xl flex items-center justify-between mb-2"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-gray-100 dark:bg-auto-graphite rounded-full flex items-center justify-center border border-theme"><i data-lucide="${v.tipo === 'Carro' ? 'car' : 'truck'}" class="w-4 h-4 text-main"></i></div><div><p class="text-xs font-bold text-main">${v.marca} ${v.modelo}</p><p class="text-[9px] font-display uppercase text-sub">${v.placa}</p></div></div><button type="button" onclick="removeVeiculo(${v.id})" class="text-sport-red"><i data-lucide="trash" class="w-4 h-4"></i></button></div>`;
             });
             lucide.createIcons();
         }
@@ -569,13 +485,7 @@
         function salvarVeiculo(e) {
             e.preventDefault();
             const vs = db.get('app_veiculos');
-            vs.push({
-                id: Date.now(),
-                tipo: document.getElementById('v-tipo').value,
-                marca: document.getElementById('v-marca').value,
-                modelo: document.getElementById('v-modelo').value,
-                placa: document.getElementById('v-placa').value.toUpperCase()
-            });
+            vs.push({ id: Date.now(), tipo: document.getElementById('v-tipo').value, marca: document.getElementById('v-marca').value, modelo: document.getElementById('v-modelo').value, placa: document.getElementById('v-placa').value.toUpperCase() });
             db.set('app_veiculos', vs);
             document.getElementById('form-veiculo').reset();
             closeVehicleModal();
@@ -593,13 +503,13 @@
 
         function toggleFiltrosReserva() {
             const tipo = document.getElementById('tipo-reserva').value;
-            if (tipo === 'hora') {
-                document.getElementById('container-hora').classList.remove('hidden');
-                document.getElementById('container-dia').classList.add('hidden');
-            } else {
-                document.getElementById('container-hora').classList.add('hidden');
-                document.getElementById('container-dia').classList.remove('hidden');
-            }
+            document.getElementById('container-hora').classList.add('hidden');
+            document.getElementById('container-dia').classList.add('hidden');
+            document.getElementById('container-mes').classList.add('hidden');
+            
+            if (tipo === 'hora') document.getElementById('container-hora').classList.remove('hidden');
+            else if (tipo === 'dia') document.getElementById('container-dia').classList.remove('hidden');
+            else if (tipo === 'mes') document.getElementById('container-mes').classList.remove('hidden');
             calcularValorReserva();
         }
 
@@ -622,25 +532,21 @@
                     const start = new Date(`${data}T${hIni}`);
                     const end = new Date(`${data}T${hFim}`);
                     let diffMs = end - start;
-                    if(diffMs > 0) {
-                        let hours = diffMs / (1000 * 60 * 60);
-                        total = Math.ceil(hours) * 15;
-                    }
+                    if(diffMs > 0) total = Math.ceil(diffMs / (1000 * 60 * 60)) * 15;
                 }
-            } else {
+            } else if (tipo === 'dia') {
                 const dIni = document.getElementById('res-dia-ini').value;
                 const dFim = document.getElementById('res-dia-fim').value;
                 if(dIni && dFim) {
                     const start = new Date(`${dIni}T00:00:00`);
                     const end = new Date(`${dFim}T00:00:00`);
                     let diffMs = end - start;
-                    if(diffMs >= 0) {
-                        let days = (diffMs / (1000 * 60 * 60 * 24)) + 1;
-                        total = days * 45;
-                    }
+                    if(diffMs >= 0) total = ((diffMs / (1000 * 60 * 60 * 24)) + 1) * 45;
                 }
+            } else if (tipo === 'mes') {
+                const qtd = parseInt(document.getElementById('res-mes-qtd').value) || 0;
+                if(document.getElementById('res-mes-ini').value && qtd > 0) total = qtd * 350;
             }
-            
             document.getElementById('valor-simulado').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
 
@@ -651,12 +557,36 @@
             if(!veiculo) return alert("Cadastre um veículo!");
             if(valor === "R$ 0,00") return alert("Selecione um período válido!");
 
+            let dataLabel = '';
+            let endTimeStamp = 0;
+
+            if (tipo === 'hora') {
+                const hIni = document.getElementById('res-hora-ini').value;
+                const hFim = document.getElementById('res-hora-fim').value;
+                const d = document.getElementById('res-data').value;
+                dataLabel = `${d.split('-').reverse().join('/')} (${hIni} às ${hFim})`;
+                endTimeStamp = new Date(`${d}T${hFim}`).getTime();
+            } else if (tipo === 'dia') {
+                const dIni = document.getElementById('res-dia-ini').value;
+                const dFim = document.getElementById('res-dia-fim').value;
+                dataLabel = `Diária: ${dIni.split('-').reverse().join('/')} até ${dFim.split('-').reverse().join('/')}`;
+                endTimeStamp = new Date(`${dFim}T23:59:59`).getTime();
+            } else if (tipo === 'mes') {
+                const dIni = document.getElementById('res-mes-ini').value;
+                const qtd = parseInt(document.getElementById('res-mes-qtd').value);
+                dataLabel = `Mensal: ${qtd} mês(es) a partir de ${dIni.split('-').reverse().join('/')}`;
+                let endObj = new Date(`${dIni}T23:59:59`);
+                endObj.setMonth(endObj.getMonth() + qtd);
+                endTimeStamp = endObj.getTime();
+            }
+
             const novaReserva = {
                 id: Date.now(),
                 filial: activeBranch.name,
                 veiculo: veiculo,
                 valor: valor,
-                data: tipo === 'hora' ? `${document.getElementById('res-data').value} (${document.getElementById('res-hora-ini').value})` : `Diária: ${document.getElementById('res-dia-ini').value}`
+                data: dataLabel,
+                endTime: endTimeStamp
             };
 
             const reservas = db.get('app_reservas_feitas');
@@ -664,6 +594,8 @@
             db.set('app_reservas_feitas', reservas);
 
             alert("Vaga Agendada com Sucesso!");
+            document.querySelectorAll('input[type="date"], input[type="time"]').forEach(el => el.value = '');
+            document.getElementById('valor-simulado').innerText = 'R$ 0,00';
             navigate('inicio');
         }
 
@@ -671,21 +603,23 @@
             const list = document.getElementById('home-reservas-list');
             const reservas = db.get('app_reservas_feitas');
             list.innerHTML = '';
-            
             if(reservas.length === 0) {
                 list.innerHTML = `<div class="glass-card rounded-xl p-4 opacity-60"><p class="text-xs text-sub italic">Nenhuma reserva agendada.</p></div>`;
                 return;
             }
 
             reservas.reverse().forEach(r => {
-                let df = r.data;
                 list.innerHTML += `
                     <div class="glass-card rounded-xl p-4 flex justify-between items-center border-l-2 border-l-dashboard-green">
                         <div>
                             <p class="text-xs font-bold text-main flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-sport-red"></i> ${r.filial.split('-')[0]}</p>
-                            <p class="text-[10px] text-sub mt-1"><span class="font-bold text-electric-blue">${df}</span> • Placa: ${r.veiculo}</p>
+                            <p class="text-[10px] text-sub mt-1"><span class="font-bold text-electric-blue">${r.data}</span> • ${r.veiculo}</p>
+                            <!-- Cronômetro Injetado -->
+                            <p class="text-[10px] font-bold mt-1.5 text-sport-red flex items-center gap-1 countdown-timer" data-endtime="${r.endTime}">
+                                ⏱️ Calculando tempo...
+                            </p>
                         </div>
-                        <div class="text-right">
+                        <div class="text-right h-full flex flex-col justify-center">
                             <p class="text-[10px] text-sub uppercase">Total</p>
                             <p class="text-sm font-bold text-dashboard-green">${r.valor}</p>
                         </div>
@@ -694,6 +628,34 @@
             });
             lucide.createIcons();
         }
+
+        // MOTOR DO CRONÔMETRO DE RESERVA (Executa a cada segundo)
+        setInterval(() => {
+            document.querySelectorAll('.countdown-timer').forEach(el => {
+                const end = parseInt(el.getAttribute('data-endtime'));
+                if(!end) return;
+                
+                const now = new Date().getTime();
+                const diff = end - now;
+
+                if (diff <= 0) {
+                    el.innerHTML = '✅ Tempo Encerrado';
+                    el.classList.remove('text-sport-red');
+                    el.classList.add('text-sub');
+                } else {
+                    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const segundos = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    let tempoFormatado = '';
+                    if(dias > 0) tempoFormatado += `${dias}d e `;
+                    tempoFormatado += `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+                    
+                    el.innerHTML = `⏱️ Restam: ${tempoFormatado}`;
+                }
+            });
+        }, 1000);
 
         setGreeting();
         initTheme();
