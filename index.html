@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AutoPrime SaaS</title>
     
-    <!-- Configurações PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,6 +45,7 @@
     </script>
     <style>
         body { transition: background-color 0.3s, color 0.3s; }
+        
         .app-bg { background-color: #f3f4f6; }
         .text-main { color: #111827; }
         .text-sub { color: #6b7280; }
@@ -61,13 +61,16 @@
         .dark .nav-bg { background-color: #0a0a0a; border-top: 1px solid #222222; }
 
         .input-style { @apply w-full bg-transparent border border-gray-300 dark:border-auto-metal text-gray-900 dark:text-pure-white rounded-lg px-4 py-3 outline-none focus:border-electric-blue transition-colors; }
+        
         ::-webkit-scrollbar { display: none; }
         input[type="file"] { display: none; }
     </style>
 </head>
-<body class="antialiased min-h-screen flex justify-center bg-gray-300 dark:bg-black">
 
-    <div class="w-full max-w-md app-bg min-h-screen relative shadow-2xl overflow-hidden flex flex-col">
+<!-- Body travado na altura exata da tela (100dvh) para garantir a Navbar Fixa -->
+<body class="antialiased h-[100dvh] w-full flex justify-center bg-gray-300 dark:bg-black overflow-hidden">
+
+    <div class="w-full max-w-md app-bg h-full relative shadow-2xl flex flex-col">
         
         <!-- Header -->
         <header class="p-6 pb-2 z-10">
@@ -84,15 +87,16 @@
                     </button>
                 </div>
             </div>
-            <div class="text-[10px] text-electric-blue uppercase tracking-widest font-bold flex items-center gap-1 mt-1"></div>
+            <!-- Espaçamento -->
+            <div class="h-2"></div>
         </header>
 
-        <!-- Main Content -->
+        <!-- Main Content (Área Rolável) -->
         <main class="flex-1 overflow-y-auto pb-28 relative px-6">
             
             <!-- VIEW: INÍCIO -->
             <section id="view-inicio" class="view-section block">
-                <div class="flex items-center gap-3 mt-4 mb-4">
+                <div class="flex items-center gap-3 mt-2 mb-4">
                     <div class="w-12 h-12 rounded-lg bg-electric-blue flex flex-shrink-0 items-center justify-center text-white shadow-neon-blue">
                         <i data-lucide="parking-circle" class="w-7 h-7"></i>
                     </div>
@@ -146,7 +150,7 @@
                 <div class="mt-8">
                     <h3 class="text-[10px] text-sub font-bold mb-3 uppercase tracking-wider flex items-center gap-2"><i data-lucide="calendar-check" class="w-4 h-4 text-electric-blue"></i> Suas Reservas Ativas</h3>
                     <div id="home-reservas-list" class="space-y-3">
-                        <!-- Injetado via JS com Cronômetro -->
+                        <!-- Injetado via JS com Cronômetro de 10 min -->
                     </div>
                 </div>
             </section>
@@ -198,7 +202,6 @@
                         </select>
                     </div>
 
-                    <!-- Campos Hora -->
                     <div id="container-hora" class="grid grid-cols-2 gap-4">
                         <div class="col-span-2">
                             <label class="text-[10px] text-sub font-bold uppercase block mb-1">Data</label>
@@ -214,7 +217,6 @@
                         </div>
                     </div>
 
-                    <!-- Campos Dia -->
                     <div id="container-dia" class="grid grid-cols-2 gap-4 hidden">
                         <div>
                             <label class="text-[10px] text-sub font-bold uppercase block mb-1">Dia Inicial</label>
@@ -226,7 +228,6 @@
                         </div>
                     </div>
 
-                    <!-- Campos Mês -->
                     <div id="container-mes" class="grid grid-cols-2 gap-4 hidden">
                         <div>
                             <label class="text-[10px] text-sub font-bold uppercase block mb-1">Data de Início</label>
@@ -249,11 +250,11 @@
                 </form>
             </section>
 
-            <!-- VIEW: CARTEIRA -->
+            <!-- VIEW: CARTEIRA (Com Recompensas Otimizadas) -->
             <section id="view-carteira" class="view-section hidden">
-                <!-- ... mantido sem alterações para o espaço do PWA ... -->
                 <h2 class="text-xl font-display font-bold text-main my-5">Programa de Fidelidade</h2>
-                <div class="bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-300 rounded-2xl p-6 text-white mb-6 relative overflow-hidden shadow-lg">
+                
+                <div class="bg-gradient-to-tr from-yellow-600 via-yellow-500 to-yellow-300 rounded-2xl p-6 text-white mb-6 relative overflow-hidden shadow-lg border border-yellow-400/50">
                     <div class="absolute right-[-20px] top-[-20px] opacity-20"><i data-lucide="award" class="w-32 h-32"></i></div>
                     <p class="text-xs font-bold uppercase tracking-widest mb-1 opacity-90">Seu Nível Atual</p>
                     <h3 class="text-3xl font-display font-bold mb-4 drop-shadow-md">Nível Ouro</h3>
@@ -262,11 +263,48 @@
                         <div class="text-right"><p class="text-[10px] uppercase font-bold opacity-90">Pontos</p><p class="text-xl font-bold">1.250 pts</p></div>
                     </div>
                 </div>
+
+                <h3 class="text-[10px] text-sub font-bold uppercase tracking-wider mb-3">Opções de Resgate</h3>
+                <div class="space-y-3">
+                    <!-- Cashback em Reais -->
+                    <div class="glass-card rounded-xl p-4 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-yellow-500/10 text-yellow-500 flex items-center justify-center">
+                                <i data-lucide="coins" class="w-5 h-5"></i>
+                            </div>
+                            <div><p class="text-sm font-bold text-main">Resgatar R$ 20 Cashback</p><p class="text-[10px] text-sub uppercase">Saldo disponível</p></div>
+                        </div>
+                        <button onclick="alert('Cashback Resgatado!')" class="bg-dashboard-green hover:bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">Resgatar</button>
+                    </div>
+
+                    <!-- Prêmio Pontos -->
+                    <div class="glass-card rounded-xl p-4 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-electric-blue/10 text-electric-blue flex items-center justify-center">
+                                <i data-lucide="clock" class="w-5 h-5"></i>
+                            </div>
+                            <div><p class="text-sm font-bold text-main">1 Hora Grátis</p><p class="text-[10px] text-sub uppercase">Trocar por pontos</p></div>
+                        </div>
+                        <button onclick="alert('Prêmio Resgatado!')" class="bg-electric-blue hover:bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">500 pts</button>
+                    </div>
+
+                    <!-- Prêmio Bloqueado (Faltam pontos) -->
+                    <div class="glass-card rounded-xl p-4 flex justify-between items-center opacity-60">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-400/10 text-blue-400 flex items-center justify-center">
+                                <i data-lucide="droplets" class="w-5 h-5"></i>
+                            </div>
+                            <div><p class="text-sm font-bold text-main">Ducha Completa</p><p class="text-[10px] text-sub uppercase">Faltam 250 pts</p></div>
+                        </div>
+                        <button class="bg-gray-400 dark:bg-auto-metal text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-not-allowed">1.500 pts</button>
+                    </div>
+                </div>
             </section>
 
             <!-- VIEW: PERFIL -->
             <section id="view-perfil" class="view-section hidden">
                 <h2 class="text-xl font-display font-bold text-main my-5">Seu Perfil</h2>
+                
                 <form id="form-perfil" onsubmit="salvarPerfilGeral(event)" class="glass-card rounded-2xl p-5 space-y-4">
                     <div class="flex justify-center mb-6">
                         <label for="perfil-foto-upload" class="cursor-pointer relative group">
@@ -280,8 +318,11 @@
                         </label>
                         <input type="file" id="perfil-foto-upload" accept="image/*" onchange="previewFotoPerfil(event)">
                     </div>
+
+                    <!-- Apenas Nome e Telefone -->
                     <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Nome Completo</label><input type="text" id="perfil-nome" class="input-style bg-gray-50 dark:bg-auto-graphite"></div>
                     <div><label class="text-[10px] text-sub font-bold uppercase tracking-wider block mb-1">Telefone</label><input type="tel" id="perfil-tel" class="input-style bg-gray-50 dark:bg-auto-graphite"></div>
+                    
                     <div class="pt-4 border-t border-theme">
                         <div class="flex justify-between items-center mb-3">
                             <label class="text-[10px] text-sub font-bold uppercase tracking-wider">Meus Veículos</label>
@@ -297,7 +338,7 @@
 
         </main>
 
-        <!-- Navbar -->
+        <!-- Navbar Fixa na Base da Tela (absolute bottom-0 âncora a base) -->
         <nav class="absolute bottom-0 w-full nav-bg px-2 pb-6 pt-3 flex justify-between items-end z-20">
             <button onclick="navigate('inicio')" class="nav-btn active flex-1 flex flex-col items-center gap-1 text-main"><i data-lucide="layout-dashboard" class="w-5 h-5"></i><span class="text-[10px] font-bold">Início</span></button>
             <button onclick="navigate('maps')" class="nav-btn flex-1 flex flex-col items-center gap-1 text-sub hover:text-main transition-colors"><i data-lucide="map-pin" class="w-5 h-5"></i><span class="text-[10px] font-bold">Maps</span></button>
@@ -474,7 +515,7 @@
             if(!c) return;
             c.innerHTML = vs.length ? '' : '<p class="text-xs text-sub italic">Nenhum veículo.</p>';
             vs.forEach(v => {
-                c.innerHTML += `<div class="glass-card p-3 rounded-xl flex items-center justify-between mb-2"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-gray-100 dark:bg-auto-graphite rounded-full flex items-center justify-center border border-theme"><i data-lucide="${v.tipo === 'Carro' ? 'car' : 'truck'}" class="w-4 h-4 text-main"></i></div><div><p class="text-xs font-bold text-main">${v.marca} ${v.modelo}</p><p class="text-[9px] font-display uppercase text-sub">${v.placa}</p></div></div><button type="button" onclick="removeVeiculo(${v.id})" class="text-sport-red"><i data-lucide="trash" class="w-4 h-4"></i></button></div>`;
+                c.innerHTML += `<div class="glass-card p-3 rounded-xl flex items-center justify-between mb-2"><div class="flex items-center gap-3"><div class="w-8 h-8 bg-gray-100 dark:bg-auto-graphite rounded-full flex items-center justify-center border border-theme"><i data-lucide="${v.tipo === 'Carro' ? 'car' : 'truck'}" class="w-4 h-4 text-main"></i></div><div><p class="text-xs font-bold text-main">${v.marca} ${v.modelo}</p><p class="text-[9px] font-display uppercase text-sub">${v.placa}</p></div></div><button type="button" onclick="removeVeiculo(${v.id})" class="text-sport-red hover:opacity-70"><i data-lucide="trash" class="w-4 h-4"></i></button></div>`;
             });
             lucide.createIcons();
         }
@@ -558,26 +599,19 @@
             if(valor === "R$ 0,00") return alert("Selecione um período válido!");
 
             let dataLabel = '';
-            let endTimeStamp = 0;
-
             if (tipo === 'hora') {
                 const hIni = document.getElementById('res-hora-ini').value;
                 const hFim = document.getElementById('res-hora-fim').value;
                 const d = document.getElementById('res-data').value;
                 dataLabel = `${d.split('-').reverse().join('/')} (${hIni} às ${hFim})`;
-                endTimeStamp = new Date(`${d}T${hFim}`).getTime();
             } else if (tipo === 'dia') {
                 const dIni = document.getElementById('res-dia-ini').value;
                 const dFim = document.getElementById('res-dia-fim').value;
                 dataLabel = `Diária: ${dIni.split('-').reverse().join('/')} até ${dFim.split('-').reverse().join('/')}`;
-                endTimeStamp = new Date(`${dFim}T23:59:59`).getTime();
             } else if (tipo === 'mes') {
                 const dIni = document.getElementById('res-mes-ini').value;
                 const qtd = parseInt(document.getElementById('res-mes-qtd').value);
                 dataLabel = `Mensal: ${qtd} mês(es) a partir de ${dIni.split('-').reverse().join('/')}`;
-                let endObj = new Date(`${dIni}T23:59:59`);
-                endObj.setMonth(endObj.getMonth() + qtd);
-                endTimeStamp = endObj.getTime();
             }
 
             const novaReserva = {
@@ -586,7 +620,7 @@
                 veiculo: veiculo,
                 valor: valor,
                 data: dataLabel,
-                endTime: endTimeStamp
+                createdAt: Date.now() // Data de criação para basear o timer de 10 min
             };
 
             const reservas = db.get('app_reservas_feitas');
@@ -599,29 +633,47 @@
             navigate('inicio');
         }
 
+        // Função para cancelar o agendamento
+        function cancelarReserva(id) {
+            if(confirm('Tem certeza que deseja cancelar esta reserva?')) {
+                const reservas = db.get('app_reservas_feitas').filter(r => r.id !== id);
+                db.set('app_reservas_feitas', reservas);
+                loadHomeReservations();
+            }
+        }
+
         function loadHomeReservations() {
             const list = document.getElementById('home-reservas-list');
             const reservas = db.get('app_reservas_feitas');
             list.innerHTML = '';
+            
             if(reservas.length === 0) {
-                list.innerHTML = `<div class="glass-card rounded-xl p-4 opacity-60"><p class="text-xs text-sub italic">Nenhuma reserva agendada.</p></div>`;
+                list.innerHTML = `<div class="glass-card rounded-xl p-4 opacity-60"><p class="text-xs text-sub italic">Nenhuma reserva ativa.</p></div>`;
                 return;
             }
 
             reservas.reverse().forEach(r => {
                 list.innerHTML += `
-                    <div class="glass-card rounded-xl p-4 flex justify-between items-center border-l-2 border-l-dashboard-green">
-                        <div>
-                            <p class="text-xs font-bold text-main flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-sport-red"></i> ${r.filial.split('-')[0]}</p>
-                            <p class="text-[10px] text-sub mt-1"><span class="font-bold text-electric-blue">${r.data}</span> • ${r.veiculo}</p>
-                            <!-- Cronômetro Injetado -->
-                            <p class="text-[10px] font-bold mt-1.5 text-sport-red flex items-center gap-1 countdown-timer" data-endtime="${r.endTime}">
-                                ⏱️ Calculando tempo...
-                            </p>
+                    <div class="glass-card rounded-xl p-4 flex flex-col border-l-2 border-l-electric-blue relative">
+                        <button onclick="cancelarReserva(${r.id})" class="absolute top-2 right-2 text-sub hover:text-sport-red transition-colors p-1"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        
+                        <div class="flex justify-between items-start mb-2 pr-6">
+                            <div>
+                                <p class="text-[11px] font-bold text-main flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3 text-sport-red"></i> ${r.filial.split('-')[0]}</p>
+                                <p class="text-[10px] text-sub mt-1"><span class="font-bold text-main">${r.data}</span></p>
+                                <p class="text-[10px] text-sub mt-0.5">Placa: ${r.veiculo}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] text-sub uppercase">Total</p>
+                                <p class="text-sm font-bold text-dashboard-green">${r.valor}</p>
+                            </div>
                         </div>
-                        <div class="text-right h-full flex flex-col justify-center">
-                            <p class="text-[10px] text-sub uppercase">Total</p>
-                            <p class="text-sm font-bold text-dashboard-green">${r.valor}</p>
+                        
+                        <!-- Novo Cronômetro de 10 Minutos para Chegada -->
+                        <div class="border-t border-theme pt-2 mt-1">
+                            <p class="text-[11px] font-bold text-electric-blue flex items-center gap-1.5 arrival-timer" data-created="${r.createdAt}">
+                                <i data-lucide="timer" class="w-3 h-3"></i> <span>Calculando tolerância...</span>
+                            </p>
                         </div>
                     </div>
                 `;
@@ -629,30 +681,23 @@
             lucide.createIcons();
         }
 
-        // MOTOR DO CRONÔMETRO DE RESERVA (Executa a cada segundo)
+        // MOTOR DO NOVO TIMER DE CHEGADA (10 Minutos)
         setInterval(() => {
-            document.querySelectorAll('.countdown-timer').forEach(el => {
-                const end = parseInt(el.getAttribute('data-endtime'));
-                if(!end) return;
+            document.querySelectorAll('.arrival-timer').forEach(el => {
+                const created = parseInt(el.getAttribute('data-created'));
+                if(!created) return;
                 
-                const now = new Date().getTime();
-                const diff = end - now;
+                const expires = created + (10 * 60 * 1000); // 10 minutos em milissegundos
+                const diff = expires - new Date().getTime();
 
                 if (diff <= 0) {
-                    el.innerHTML = '✅ Tempo Encerrado';
-                    el.classList.remove('text-sport-red');
-                    el.classList.add('text-sub');
+                    el.innerHTML = '<i data-lucide="alert-triangle" class="w-3 h-3"></i> <span>Tolerância Esgotada</span>';
+                    el.classList.replace('text-electric-blue', 'text-sport-red');
+                    lucide.createIcons();
                 } else {
-                    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const horas = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutos = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                     const segundos = Math.floor((diff % (1000 * 60)) / 1000);
-                    
-                    let tempoFormatado = '';
-                    if(dias > 0) tempoFormatado += `${dias}d e `;
-                    tempoFormatado += `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
-                    
-                    el.innerHTML = `⏱️ Restam: ${tempoFormatado}`;
+                    el.querySelector('span').innerText = `Chegue em: ${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')} para garantir a vaga`;
                 }
             });
         }, 1000);
